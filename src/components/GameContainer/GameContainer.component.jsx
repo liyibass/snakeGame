@@ -1,49 +1,32 @@
 import React, { useState, useEffect } from "react";
 import "./GameContainer.style.scss";
 import SnakeDots from "../SnakeDot/SnakeDots.component";
+import SnakeFood from "../SnakeFood/SnakeFood.component";
+
+const default_food_point = 10;
+const default_speed = 100;
+const default_snake = [
+  { row: 0, col: 5 },
+  { row: 1, col: 5 },
+  { row: 2, col: 5 },
+  { row: 3, col: 5 },
+];
+const default_life = 3;
 
 function GameContainer() {
-  const [snakePosition, setSnakePosition] = useState([
-    [0, 5],
-    [1, 5],
-    [2, 5],
-    [3, 5],
-  ]);
-  const [foodPosition, setFoodPosition] = useState([]);
+  const [snakePosition, setSnakePosition] = useState(default_snake);
   const [moveDirection, setMoveDirection] = useState("ArrowRight");
-  const [speed, setSpeed] = useState(100);
+  const [foodPosition, setFoodPosition] = useState(generateFood());
+  const [speed, setSpeed] = useState(default_speed);
+  const [score, setScore] = useState(0);
+  const [foodScore, setFoodScore] = useState(default_food_point);
 
-  const snakeMove = () => {
-    let newSnakeArray = [...snakePosition];
-    let head = newSnakeArray[newSnakeArray.length - 1];
-    switch (moveDirection) {
-      case "ArrowRight":
-        head = [(head[0] + 1) % 18, head[1]];
+  const [life, setLife] = useState(default_life);
+  const [deadFlag, setDeadFlag] = useState(false);
 
-        break;
+  const [tiktok, setTiktok] = useState(true);
 
-      case "ArrowLeft":
-        head = [(head[0] + 17) % 18, head[1]];
-        break;
-
-      case "ArrowDown":
-        head = [head[0], (head[1] + 1) % 12];
-        break;
-
-      case "ArrowUp":
-        head = [head[0], (head[1] + 11) % 12];
-        break;
-
-      default:
-        break;
-    }
-    newSnakeArray.push(head);
-    newSnakeArray.shift();
-
-    setSnakePosition(newSnakeArray);
-  };
-
-  const onKeydown = (e) => {
+  function onKeydown(e) {
     switch (e.code) {
       case "ArrowLeft":
         if (moveDirection === "ArrowRight") break;
@@ -66,38 +49,143 @@ function GameContainer() {
         setMoveDirection("ArrowDown");
         break;
 
+      case "Enter":
+        resetGame();
+        break;
+
       default:
         break;
     }
-  };
+  }
+
+  function snakeMove() {
+    let newSnakeArray = [...snakePosition];
+    // 1找到頭
+    let head = newSnakeArray[newSnakeArray.length - 1];
+    // 2根據不同方向新增新頭
+    switch (moveDirection) {
+      case "ArrowRight":
+        head = { ...head, row: head.row + 1 };
+
+        break;
+
+      case "ArrowLeft":
+        head = { ...head, row: head.row - 1 };
+        break;
+
+      case "ArrowDown":
+        head = { ...head, col: head.col + 1 };
+        break;
+
+      case "ArrowUp":
+        head = { ...head, col: head.col - 1 };
+        break;
+
+      default:
+        break;
+    }
+    if (head.row < 0 || head.col < 0 || head.row > 17 || head.col > 11) {
+      if (life > 1) {
+        setLife((life) => life - 1);
+        startNewGame();
+        return;
+      } else {
+        setDeadFlag(true);
+        return;
+      }
+    }
+
+    //  檢查當前的頭是否跟身體任何一段位置一樣（相撞）
+    newSnakeArray.forEach((dot) => {
+      if (head.row === dot.row && head.col === dot.col) {
+        // 確認相撞 檢查生命數 若仍有一條以上的命則繼續遊戲
+        if (life > 1) {
+          setLife((life) => life - 1);
+          startNewGame();
+        } else {
+          setDeadFlag(true);
+        }
+      }
+    });
+
+    newSnakeArray.push(head);
+    if (head.row === foodPosition.row && head.col === foodPosition.col) {
+      // 3 當吃到食物時 不用去尾以延長蛇身 並重置食物位置
+      setFoodPosition(generateFood());
+      setScore((score) => score + foodScore);
+      setFoodScore(default_food_point);
+    } else {
+      // 3 正常行進 去尾
+      newSnakeArray.shift();
+    }
+
+    setSnakePosition(newSnakeArray);
+  }
+
+  function generateFood() {
+    const row = Math.floor(Math.random() * 18);
+    const col = Math.floor(Math.random() * 12);
+
+    return { row: row, col: col };
+  }
+
+  function startNewGame() {
+    console.log("------restart------");
+    setSnakePosition(default_snake);
+    setMoveDirection("ArrowRight");
+    setFoodPosition(generateFood());
+  }
+
+  function resetGame() {
+    setDeadFlag(false);
+    setLife(default_life);
+    setSnakePosition(default_snake);
+    setMoveDirection("ArrowRight");
+    setFoodPosition(generateFood());
+    setTiktok(!tiktok);
+  }
 
   useEffect(() => {
+    // 檢測方向
     document.onkeydown = (e) => onKeydown(e);
-    const interval = setInterval(() => {
-      snakeMove();
+    snakeMove();
+    // 移動
+    const moveInterval = setTimeout(() => {
+      setTiktok(!tiktok);
     }, speed);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [snakePosition]);
+    if (deadFlag) clearTimeout(moveInterval);
+  }, [tiktok]);
 
-  return (
-    <div className="GameContainer">
-      <div className="scoreSection">
-        <h1>190</h1>
-
-        <h1>{moveDirection}</h1>
-
-        <div className="life">
-          <i className="fas fa-heart"></i>
-          <h1>17</h1>
+  if (!deadFlag) {
+    return (
+      <div className="GameContainer">
+        <div className="scoreSection">
+          <h1>{score}</h1>
+          <div className="life">
+            <i className="fas fa-heart"></i>
+            <h1>{life}</h1>
+          </div>
+        </div>
+        <div className="Gamepad">
+          <SnakeDots snakePosition={snakePosition} />
+          <SnakeFood
+            foodPosition={foodPosition}
+            foodScore={foodScore}
+            setFoodScore={setFoodScore}
+          />
         </div>
       </div>
-      <div className="Gamepad">
-        <SnakeDots snakePosition={snakePosition} />
+    );
+  } else {
+    return (
+      <div className="GameContainer">
+        <div className="gameover" onClick={() => resetGame()}>
+          <h1>Game Over</h1>
+          <h3>Click screen or press Enter to restart</h3>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
-export default GameContainer;
+export default React.memo(GameContainer);

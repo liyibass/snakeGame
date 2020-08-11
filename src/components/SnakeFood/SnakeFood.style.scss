@@ -1,0 +1,14 @@
+@import "../../styles/base/variables.scss";
+@import "../../styles/base/responsiveMixin.scss";
+
+.SnakeFood {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  margin: 1px;
+  // border: 20px black solid;
+  background-color: black;
+
+  @include atSmall {
+  }
+}

@@ -7,7 +7,8 @@ function Nokia() {
   return (
     <div className="Nokia">
       <GameContainer />
-      {/* <img src={nokiaImage} alt="nokia" className="nokiaImage" /> */}
+      <div className="screen"></div>
+      <img src={nokiaImage} alt="nokia" className="nokiaImage" />
     </div>
   );
 }

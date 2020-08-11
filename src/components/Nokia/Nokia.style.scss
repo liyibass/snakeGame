@@ -9,6 +9,18 @@
   margin: auto;
   z-index: 1;
 
+  .screen {
+    width: 450px;
+    height: 320px;
+    position: absolute;
+    top: 116px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(90, 120, 72);
+    border-radius: 40px;
+    z-index: 2;
+  }
+
   .nokiaImage {
     position: relative;
     width: 100%;
