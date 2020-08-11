@@ -1,0 +1,53 @@
+@import "../../styles/base/variables.scss";
+@import "../../styles/base/responsiveMixin.scss";
+
+.GameContainer {
+  width: 450px;
+  height: 320px;
+  position: absolute;
+  top: 116px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgb(90, 120, 72);
+  border-radius: 40px;
+  z-index: 1;
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .scoreSection {
+    width: 370px;
+    border-bottom: 5px black solid;
+    margin-bottom: 7px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .life {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    h1 {
+      margin: 0;
+    }
+    i {
+      font-size: 1.8rem;
+    }
+  }
+
+  .Gamepad {
+    border: 5px black solid;
+    position: relative;
+    width: 360px;
+    height: 240px;
+  }
+
+  .testBtn {
+    z-index: 100;
+  }
+  @include atSmall {
+  }
+}

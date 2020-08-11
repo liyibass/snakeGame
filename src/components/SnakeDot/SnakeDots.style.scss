@@ -1,0 +1,17 @@
+@import "../../styles/base/variables.scss";
+@import "../../styles/base/responsiveMixin.scss";
+
+.SnakeDots {
+  // background-color: red;
+
+  .dot {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    margin: 1px;
+    background-color: black;
+  }
+  background-color: black;
+  @include atSmall {
+  }
+}

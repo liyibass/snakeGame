@@ -1,0 +1,44 @@
+@import "./variables.scss";
+html {
+  // height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  // height: 100%;
+}
+
+#root {
+  // height: 100%;
+}
+
+.App {
+  // height: 100%;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: rgb(50, 52, 57);
+}
+
+i {
+  user-select: none;
+}
+
+.btn {
+  // background-color: $mainDark;
+  // color: $mainLight;
+  // text-decoration: none;
+  // padding: 0.6rem 1.3rem;
+  // border-radius: 10px;
+  // border: 0;
+
+  // &:hover {
+  //   background-color: $mainLight;
+  //   color: $mainDark;
+  //   transition: all 0.5s ease-out;
+  // }
+}
+
+a {
+  text-decoration: none;
+}
