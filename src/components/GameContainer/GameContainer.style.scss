@@ -40,9 +40,42 @@
   .Gamepad {
     border: 5px black solid;
     position: relative;
-    // width: 100%;
-    // height: 75%;
+
     z-index: 10;
+  }
+
+  .arrowButton {
+    position: absolute;
+    z-index: 10;
+    width: 140%;
+    height: 100%;
+    // background-color: gold;
+    top: 190%;
+    .button {
+      position: absolute;
+      background-color: black;
+      width: 30%;
+      height: 30%;
+      border-radius: 40px;
+      opacity: 0.4;
+    }
+    .up {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .down {
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .left {
+      top: 28%;
+    }
+    .right {
+      top: 28%;
+      right: 0;
+    }
   }
 
   .gameover {

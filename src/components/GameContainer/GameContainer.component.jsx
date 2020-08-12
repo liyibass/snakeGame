@@ -2,19 +2,20 @@ import React, { useState, useEffect } from "react";
 import "./GameContainer.style.scss";
 import SnakeDots from "../SnakeDot/SnakeDots.component";
 import SnakeFood from "../SnakeFood/SnakeFood.component";
+import { checkIfDead, addNewHead, ignoreWall } from "./GameContainerUtil";
 
 const default_food_point = 10;
 const default_speed = 100;
 const default_snake = [
-  { row: 0, col: 0 },
-  { row: 1, col: 0 },
-  { row: 2, col: 0 },
-  { row: 3, col: 0 },
+  { row: 0, col: 4 },
+  { row: 1, col: 4 },
+  { row: 2, col: 4 },
+  { row: 3, col: 4 },
 ];
 const default_life = 3;
 
 function GameContainer() {
-  const [dotWidth, setDotWidth] = useState(15);
+  const [dotWidth, setDotWidth] = useState(20);
   const [totalRowDots, setTotalRowDots] = useState();
   const [totalColDots, setTotalColDots] = useState();
 
@@ -30,15 +31,21 @@ function GameContainer() {
   const [deadFlag, setDeadFlag] = useState(false);
 
   const [tiktok, setTiktok] = useState(true);
+  const [wallFlag, setWallFlag] = useState(false);
 
   // 初始長寬
   useEffect(() => {
     const div = document.getElementById("GameContainer");
-    const rowdots = Math.floor(div.offsetWidth / dotWidth);
-    const coldots = Math.floor(div.offsetHeight / dotWidth) - 5;
+    if (Math.floor(div.offsetHeight / dotWidth) - 5 < 8) {
+      setDotWidth(15);
+      setTotalRowDots(Math.floor(div.offsetWidth / 15));
+      setTotalColDots(Math.floor(div.offsetHeight / 15) - 5);
+    } else {
+      setTotalRowDots(Math.floor(div.offsetWidth / 20));
+      setTotalColDots(Math.floor(div.offsetHeight / 20) - 5);
 
-    setTotalRowDots(rowdots);
-    setTotalColDots(coldots);
+      setDotWidth(20);
+    }
   }, []);
 
   const onKeydown = (e) => {
@@ -78,60 +85,39 @@ function GameContainer() {
     // 1找到頭
     let head = newSnakeArray[newSnakeArray.length - 1];
     // 2根據不同方向新增新頭
-    switch (moveDirection) {
-      case "ArrowRight":
-        head = { ...head, row: head.row + 1 };
+    head = addNewHead(head, moveDirection);
 
-        break;
-
-      case "ArrowLeft":
-        head = { ...head, row: head.row - 1 };
-        break;
-
-      case "ArrowDown":
-        head = { ...head, col: head.col + 1 };
-        break;
-
-      case "ArrowUp":
-        head = { ...head, col: head.col - 1 };
-        break;
-
-      default:
-        break;
-    }
+    // 檢查是否撞牆
     if (
       head.row < 0 ||
       head.col < 0 ||
       head.row > totalRowDots - 1 ||
       head.col > totalColDots - 1
     ) {
-      if (life > 1) {
-        // setLife((life) => life - 1);
-        startNewGame();
-        return;
+      if (wallFlag) {
+        if (checkIfDead(life, setLife, startNewGame, setDeadFlag)) {
+          return;
+        }
       } else {
-        setDeadFlag(true);
-        return;
+        // 無視牆壁
+        head = ignoreWall(head, totalRowDots, totalColDots);
       }
     }
 
     //  檢查當前的頭是否跟身體任何一段位置一樣（相撞）
-    newSnakeArray.forEach((dot) => {
+    for (let i = 0; i < newSnakeArray.length; i++) {
+      const dot = newSnakeArray[i];
       if (head.row === dot.row && head.col === dot.col) {
         // 確認相撞 檢查生命數 若仍有一條以上的命則繼續遊戲
-        if (life > 1) {
-          setLife((life) => life - 1);
-
-          startNewGame();
-        } else {
-          setDeadFlag(true);
+        if (checkIfDead(life, setLife, startNewGame, setDeadFlag)) {
+          return;
         }
       }
-    });
+    }
 
     newSnakeArray.push(head);
+    // 3 當吃到食物時 不用去尾以延長蛇身 並重置食物位置
     if (head.row === foodPosition.row && head.col === foodPosition.col) {
-      // 3 當吃到食物時 不用去尾以延長蛇身 並重置食物位置
       setFoodPosition(generateFood(totalColDots, totalColDots));
       setScore((score) => score + foodScore);
       setFoodScore(default_food_point);
@@ -169,8 +155,8 @@ function GameContainer() {
   useEffect(() => {
     // 檢測方向
     document.onkeydown = (e) => onKeydown(e);
-    snakeMove();
     // 移動
+    snakeMove();
     const moveInterval = setTimeout(() => {
       setTiktok(!tiktok);
     }, speed);
@@ -187,7 +173,6 @@ function GameContainer() {
           }}
         >
           <h1>{score}</h1>
-
           <div className="life">
             <i className="fas fa-heart"></i>
             <h1>{life}</h1>
@@ -207,6 +192,25 @@ function GameContainer() {
             foodScore={foodScore}
             setFoodScore={setFoodScore}
           />
+        </div>
+
+        <div className="arrowButton">
+          <div
+            className="button up"
+            onClick={() => setMoveDirection("ArrowUp")}
+          ></div>
+          <div
+            className="button down"
+            onClick={() => setMoveDirection("ArrowDown")}
+          ></div>
+          <div
+            className="button left"
+            onClick={() => setMoveDirection("ArrowLeft")}
+          ></div>
+          <div
+            className="button right"
+            onClick={() => setMoveDirection("ArrowRight")}
+          ></div>
         </div>
       </div>
     );
