@@ -48,8 +48,8 @@ function GameContainer() {
     }
   }, []);
 
-  const onKeydown = (e) => {
-    switch (e.code) {
+  const onKeydown = (direction) => {
+    switch (direction) {
       case "ArrowLeft":
         if (moveDirection === "ArrowRight") break;
         setMoveDirection("ArrowLeft");
@@ -154,7 +154,8 @@ function GameContainer() {
 
   useEffect(() => {
     // 檢測方向
-    document.onkeydown = (e) => onKeydown(e);
+    document.onkeydown = (e) => onKeydown(e.code);
+
     // 移動
     snakeMove();
     const moveInterval = setTimeout(() => {
@@ -163,67 +164,60 @@ function GameContainer() {
     if (deadFlag) clearTimeout(moveInterval);
   }, [tiktok]);
 
-  if (!deadFlag) {
-    return (
-      <div className="GameContainer" id="GameContainer">
-        <div
-          className="scoreSection"
-          style={{
-            width: `${totalRowDots * dotWidth}px`,
-          }}
-        >
-          <h1>{score}</h1>
-          <div className="life">
-            <i className="fas fa-heart"></i>
-            <h1>{life}</h1>
-          </div>
-        </div>
-        <div
-          className="Gamepad"
-          style={{
-            width: `${totalRowDots * dotWidth}px`,
-            height: `${totalColDots * dotWidth}px`,
-          }}
-        >
-          <SnakeDots dotWidth={dotWidth} snakePosition={snakePosition} />
-          <SnakeFood
-            dotWidth={dotWidth}
-            foodPosition={foodPosition}
-            foodScore={foodScore}
-            setFoodScore={setFoodScore}
-          />
-        </div>
-
-        <div className="arrowButton">
-          <div
-            className="button up"
-            onClick={() => setMoveDirection("ArrowUp")}
-          ></div>
-          <div
-            className="button down"
-            onClick={() => setMoveDirection("ArrowDown")}
-          ></div>
-          <div
-            className="button left"
-            onClick={() => setMoveDirection("ArrowLeft")}
-          ></div>
-          <div
-            className="button right"
-            onClick={() => setMoveDirection("ArrowRight")}
-          ></div>
+  return (
+    <div className="GameContainer" id="GameContainer">
+      <div
+        className="scoreSection"
+        style={{
+          width: `${totalRowDots * dotWidth}px`,
+        }}
+      >
+        <h1>{score}</h1>
+        <div className="life">
+          <i className="fas fa-heart"></i>
+          <h1>{life}</h1>
         </div>
       </div>
-    );
-  } else {
-    return (
-      <div className="GameContainer">
+      <div
+        className="Gamepad"
+        style={{
+          width: `${totalRowDots * dotWidth}px`,
+          height: `${totalColDots * dotWidth}px`,
+        }}
+      >
+        <SnakeDots dotWidth={dotWidth} snakePosition={snakePosition} />
+        <SnakeFood
+          dotWidth={dotWidth}
+          foodPosition={foodPosition}
+          foodScore={foodScore}
+          setFoodScore={setFoodScore}
+        />
+      </div>
+
+      <div className="arrowButton">
+        <div className="button up" onClick={() => onKeydown("ArrowUp")}></div>
+        <div
+          className="button down"
+          onClick={() => onKeydown("ArrowDown")}
+        ></div>
+        <div
+          className="button left"
+          onClick={() => onKeydown("ArrowLeft")}
+        ></div>
+        <div
+          className="button right"
+          onClick={() => onKeydown("ArrowRight")}
+        ></div>
+      </div>
+
+      {deadFlag ? (
         <div className="gameover" onClick={() => resetGame()}>
           <h1>Game Over</h1>
           <h3>Click screen or press Enter to restart</h3>
         </div>
-      </div>
-    );
-  }
+      ) : null}
+    </div>
+  );
 }
 
 export default React.memo(GameContainer);
