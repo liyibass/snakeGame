@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./styles/base/overall.scss";
-import GameContainer from "./components/GameContainer/GameContainer.component";
 import Nokia from "./components/Nokia/Nokia.component";
 
 function App() {

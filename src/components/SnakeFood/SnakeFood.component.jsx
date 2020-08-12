@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./SnakeFood.style.scss";
 
-function SnakeFood({ foodPosition, foodScore, setFoodScore }) {
+function SnakeFood({ dotWidth, foodPosition, foodScore, setFoodScore }) {
   // 食物出現開始倒數
   useEffect(() => {
     const foodTimeout = setTimeout(() => {
@@ -18,8 +18,10 @@ function SnakeFood({ foodPosition, foodScore, setFoodScore }) {
     <div
       className="SnakeFood"
       style={{
-        left: `${foodPosition.row * 20}px`,
-        top: `${foodPosition.col * 20}px`,
+        width: `${dotWidth - 1}px`,
+        height: `${dotWidth - 1}px`,
+        left: `${foodPosition.row * dotWidth}px`,
+        top: `${foodPosition.col * dotWidth}px`,
       }}
     />
   );

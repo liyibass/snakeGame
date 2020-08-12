@@ -32,18 +32,12 @@
       margin-top: 64%;
     }
   }
-}
-
-// 豎屏CSS
-@media (orientation: portrait) {
-  .Nokia {
-    width: 100%;
+  @media (orientation: portrait) {
+    height: 100vh;
   }
-}
 
-//橫屏CSS
-@media (orientation: landscape) {
-  .Nokia {
+  //橫屏CSS
+  @media (orientation: landscape) {
     width: 650px;
     // min-width: 100%;
 
@@ -60,3 +54,5 @@
     }
   }
 }
+
+// 豎屏CSS

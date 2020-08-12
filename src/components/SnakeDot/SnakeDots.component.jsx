@@ -2,7 +2,7 @@ import React from "react";
 import "./SnakeDots.style.scss";
 import { nanoid } from "nanoid";
 
-function SnakeDots({ snakePosition }) {
+function SnakeDots({ dotWidth, snakePosition }) {
   return (
     <div className="SnakeDots">
       {snakePosition.map((position) => {
@@ -11,8 +11,10 @@ function SnakeDots({ snakePosition }) {
             key={nanoid()}
             className="dot"
             style={{
-              left: `${position.row * 20}px`,
-              top: `${position.col * 20}px`,
+              width: `${dotWidth - 1}px`,
+              height: `${dotWidth - 1}px`,
+              left: `${position.row * dotWidth}px`,
+              top: `${position.col * dotWidth}px`,
             }}
           />
         );

@@ -9,7 +9,7 @@ function Nokia() {
       <div className="nokiaBody">
         <div className="screen">
           <GameContainer />
-        </div>{" "}
+        </div>
         <img src={nokiaImage} alt="nokia" className="nokiaImage" />
       </div>
     </div>
