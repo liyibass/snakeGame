@@ -6,9 +6,12 @@ import GameContainer from "../GameContainer/GameContainer.component";
 function Nokia() {
   return (
     <div className="Nokia">
-      <GameContainer />
-      <div className="screen"></div>
-      <img src={nokiaImage} alt="nokia" className="nokiaImage" />
+      <div className="nokiaBody">
+        <div className="screen">
+          <GameContainer />
+        </div>{" "}
+        <img src={nokiaImage} alt="nokia" className="nokiaImage" />
+      </div>
     </div>
   );
 }

@@ -6,10 +6,10 @@ import SnakeFood from "../SnakeFood/SnakeFood.component";
 const default_food_point = 10;
 const default_speed = 100;
 const default_snake = [
-  { row: 0, col: 5 },
-  { row: 1, col: 5 },
-  { row: 2, col: 5 },
-  { row: 3, col: 5 },
+  { row: 0, col: 0 },
+  { row: 1, col: 0 },
+  { row: 2, col: 0 },
+  { row: 3, col: 0 },
 ];
 const default_life = 3;
 

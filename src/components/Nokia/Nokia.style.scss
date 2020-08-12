@@ -1,34 +1,62 @@
 @import "../../styles/base/variables.scss";
 @import "../../styles/base/responsiveMixin.scss";
 
+// $width: 530px;
+
 .Nokia {
-  // background: url("../../images/nokia.png");
-  width: 650px;
-  height: 100vh;
-  overflow: hidden;
-  margin: auto;
+  // box-sizing: border-box;
   z-index: 1;
+  margin: auto;
 
-  .screen {
-    width: 450px;
-    height: 320px;
-    position: absolute;
-    top: 116px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgb(90, 120, 72);
-    border-radius: 40px;
-    z-index: 2;
-  }
-
-  .nokiaImage {
+  .nokiaBody {
     position: relative;
     width: 100%;
-    top: -300px;
-    z-index: 2;
-    // opacity: 0.5;
-  }
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-  @include atSmall {
+    .nokiaImage {
+      position: absolute;
+      display: block;
+      z-index: 2;
+      width: 100%;
+    }
+
+    .screen {
+      position: absolute;
+      z-index: 1;
+      width: 68%;
+      padding-bottom: 48.8%;
+      background-color: rgb(90, 120, 72);
+      margin-top: 64%;
+    }
+  }
+}
+
+// 豎屏CSS
+@media (orientation: portrait) {
+  .Nokia {
+    width: 100%;
+  }
+}
+
+//橫屏CSS
+@media (orientation: landscape) {
+  .Nokia {
+    width: 650px;
+    // min-width: 100%;
+
+    @include atSuperLarge {
+      margin-top: -200px;
+    }
+
+    @include atLarge {
+      margin-top: -300px;
+    }
+    @include atMedium {
+      width: 100%;
+      margin-top: -68%;
+    }
   }
 }
